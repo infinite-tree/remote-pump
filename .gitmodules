@@ -1,0 +1,3 @@
+[submodule "MicroWebSrv2"]
+	path = MicroWebSrv2
+	url = git@github.com:infinite-tree/MicroWebSrv2.git
