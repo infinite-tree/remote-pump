@@ -31,13 +31,29 @@ esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash --flash_size=detect 0x1
 ```
 
 
-### Installing the Python code
+### Installing the Base Python code
 
 ```
 pip3 install adafruit-ampy --upgrade
 ampy --port /dev/ttyUSB0 put config.py /config.py
 ampy --port /dev/ttyUSB0 put www /www
 ampy --port /dev/ttyUSB0 put /MicroWebSrv2/MicroWebSrv2 /MicroWebSrv2
+```
+
+
+### Installing the default version (web control only)
+
+```
 ampy --port /dev/ttyUSB0 put main.py /main.py
 ```
 
+### Installing the external control version
+This version has the web functionality + external controls tied to sensors + influxdb logging
+
+Level sensors:
+  - High Water (tank full)
+  - Mid Water (start filling)
+  - Low Water (report status for alerts)
+
+Pressure sensors:
+  - Filter Input (report status for alerts)

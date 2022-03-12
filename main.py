@@ -9,7 +9,6 @@ from MicroWebSrv2 import (GET, POST, MicroWebSrv2, WebRoute)
 
 
 PUMP_STATUS_PIN = machine.Pin(4, machine.Pin.IN, machine.Pin.PULL_UP)
-# Switching ground
 PUMP_CONTROL_PIN = machine.Pin(18, machine.Pin.OUT)
 PUMP_CONTROL_PIN.on()
 
@@ -21,6 +20,11 @@ START_TIME = None
 HOUR = 60*60
 MINUTE = 60.0
 
+INDEX_FILE = "/www/index.html"
+SCRIPTS_FILE = "/www/scripts.js"
+INDEX_MIMETYPE = MicroWebSrv2.GetMimeTypeFromFilename(INDEX_FILE)
+SCRIPTS_MIMETYPE = MicroWebSrv2.GetMimeTypeFromFilename(SCRIPTS_FILE)
+
 
 @WebRoute(POST, '/pump-on')
 def RequestTestRedirect(microWebSrv2, request):
@@ -31,7 +35,13 @@ def RequestTestRedirect(microWebSrv2, request):
         data = request.GetPostedJSONObject()
         # grab the hours a the end
         btn = data["button"]
-        runtime = int(btn.split('-')[-1])
+        btn_time = btn.split('-')[-1]
+        if btn_time.endswith("min"):
+            runtime = float(btn_time[0:-3]) / 60.0
+        elif btn_time.endswith("hr"):
+            runtime = float(btn_time[0:-2])
+        else:
+            runtime = float(btn_time)
     except Exception as e:
         print("Exception: %s"%(str(e)))
         request.Response.ReturnBadRequest()
@@ -88,7 +98,26 @@ def RequestTestRedirect(microWebSrv2, request):
         "running": running,
         "remaining": time_str
     }
+    request.Response.AllowCaching = False
     request.Response.ReturnOkJSON(status)
+
+
+@WebRoute(GET, '/')
+def RequestTestRedirect(microWebSrv2, request):
+    request.Response.AllowCaching = False
+    # set cache age to 6hrs
+    request.Response.SetHeader('Cache-Control', 'public, max-age=21600')
+    request.Response.ContentType = INDEX_MIMETYPE
+    request.Response.ReturnFile(INDEX_FILE)
+
+
+@WebRoute(GET, '/scripts.js')
+def RequestTestRedirect(microWebSrv2, request):
+    request.Response.AllowCaching = False
+    # set cache age to 6hrs
+    request.Response.SetHeader('Cache-Control', 'public, max-age=21600')
+    request.Response.ContentType = SCRIPTS_MIMETYPE
+    request.Response.ReturnFile(SCRIPTS_FILE)
 
 
 def check_pump_time():
@@ -117,7 +146,8 @@ def loadConfig():
 def connectToWifi(wifi, config):
     while not wifi.isconnected():
         print("Connecting to WIFI")
-        wifi.ifconfig((config["WIFI_IP"], config["WIFI_NETMASK"], config["WIFI_GATEWAY"], config["WIFI_DNS"]))
+        if "WIFI_IP" in config:
+            wifi.ifconfig((config["WIFI_IP"], config["WIFI_NETMASK"], config["WIFI_GATEWAY"], config["WIFI_DNS"]))
         wifi.connect(config["WIFI_SSID"], config["WIFI_PASSWD"])
         for x in range(WIFI_CONNECTION_DELAY):
             if wifi.isconnected():
@@ -149,7 +179,7 @@ def main():
     try :
         while server.IsRunning:
             check_pump_time()
-            time.sleep(1)
+            time.sleep(0.1)
     except KeyboardInterrupt:
         pass
     except Exception as e:

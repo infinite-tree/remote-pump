@@ -18,22 +18,22 @@ function hideBtn(id) {
 
 function showHours() {
     // showBtn("pump-btn-1");
-    showBtn("pump-btn-2");
+    showBtn("pump-btn-2hr");
     // showBtn("pump-btn-3");
-    showBtn("pump-btn-4");
+    showBtn("pump-btn-4hr");
     // showBtn("pump-btn-5");
-    showBtn("pump-btn-6");
+    showBtn("pump-btn-6hr");
 
     hideBtn("cancel-btn");
 }
 
 function showStop() {
     // hideBtn("pump-btn-1");
-    hideBtn("pump-btn-2");
+    hideBtn("pump-btn-2hr");
     // hideBtn("pump-btn-3");
-    hideBtn("pump-btn-4");
+    hideBtn("pump-btn-4hr");
     // hideBtn("pump-btn-5");
-    hideBtn("pump-btn-6");
+    hideBtn("pump-btn-6hr");
 
     showBtn("cancel-btn");
 }
@@ -104,12 +104,12 @@ function onReady() {
     hideBtn("cancel-btn");
 
     // Handle hours selection
-    // document.getElementById("pump-btn-1").addEventListener("click", handleButton);
-    document.getElementById("pump-btn-2").addEventListener("click", handleButton);
-    // document.getElementById("pump-btn-3").addEventListener("click", handleButton);
-    document.getElementById("pump-btn-4").addEventListener("click", handleButton);
-    // document.getElementById("pump-btn-5").addEventListener("click", handleButton);
-    document.getElementById("pump-btn-6").addEventListener("click", handleButton);
+    // document.getElementById("pump-btn-1hr").addEventListener("click", handleButton);
+    document.getElementById("pump-btn-2hr").addEventListener("click", handleButton);
+    // document.getElementById("pump-btn-3hr").addEventListener("click", handleButton);
+    document.getElementById("pump-btn-4hr").addEventListener("click", handleButton);
+    // document.getElementById("pump-btn-5hr").addEventListener("click", handleButton);
+    document.getElementById("pump-btn-6hr").addEventListener("click", handleButton);
     document.getElementById("cancel-btn").addEventListener("click", handleButton);
 
     updatePumpStatus();
